@@ -4,14 +4,12 @@
  * y agrega productos al carrito.
  */
 
-// ===== Estilos =====
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'bootstrap';
-import './catalogo.css';
 
 // ===== Datos =====
 import { productos, precioFinal, formatearPrecio } from './data/productos.js';
+import { agregarAlCarrito } from './components/cart.js';
+import { mountLayout } from './layout.js';
 
 // ===== Referencias a elementos del HTML =====
 // Las guardamos una sola vez para no buscarlas cada vez que las usamos
@@ -23,7 +21,7 @@ const contenedorTallas = document.querySelector('#opciones-talla');
 const contenedorColores = document.querySelector('#opciones-color');
 const selectOrdenar = document.querySelector('#ordenar');
 const precioMaxTexto = document.querySelector('#precio-max-texto');
-const contadorCarrito = document.querySelector('#contador-carrito'); // NUEVO (paso 5.3a)
+mountLayout({ activePage: 'catalogo' });
 
 // =========================================================
 //  TARJETAS
@@ -51,6 +49,14 @@ function crearTarjeta(producto, indice) { // CAMBIO (paso 5.2): ahora recibe "in
     ? `<span class="precio-anterior">${formatearPrecio(producto.precio)}</span>`
     : '';
 
+  const opcionesTalla = producto.tallas
+    .map((talla) => `<option value="${talla}">${talla}</option>`)
+    .join('');
+
+  const opcionesColor = producto.colores
+    .map((color) => `<option value="${color.nombre}">${color.nombre}</option>`)
+    .join('');
+
   // Un circulito por cada color disponible
   const puntosColor = producto.colores
     .map((color) => `<span class="punto-color" style="background-color: ${color.hex}" title="${color.nombre}"></span>`)
@@ -64,7 +70,12 @@ function crearTarjeta(producto, indice) { // CAMBIO (paso 5.2): ahora recibe "in
           ${etiquetaDescuento}
           ${etiquetaNuevo}
           <img src="${producto.imagen}" alt="${producto.nombre}" loading="lazy" />
-          <button type="button" class="btn-agregar" data-id="${producto.id}">
+          <button
+            type="button"
+            class="btn-agregar"
+            data-id="${producto.id}"
+            aria-label="Añadir ${producto.nombre} al carrito"
+          >
             <i class="bi bi-bag-plus"></i> Añadir al carrito
           </button>
         </div>
@@ -77,6 +88,25 @@ function crearTarjeta(producto, indice) { // CAMBIO (paso 5.2): ahora recibe "in
             ${formatearPrecio(precioFinal(producto))}
             ${precioAnterior}
           </p>
+          <div class="opciones-producto mt-3">
+            <label for="talla-producto-${producto.id}" class="visually-hidden">Talla de ${producto.nombre}</label>
+            <select id="talla-producto-${producto.id}" class="form-select form-select-sm" data-selection="talla">
+              <option value="" selected disabled>Talla</option>
+              ${opcionesTalla}
+            </select>
+
+            <label for="color-producto-${producto.id}" class="visually-hidden">Color de ${producto.nombre}</label>
+            <select id="color-producto-${producto.id}" class="form-select form-select-sm" data-selection="color">
+              <option value="" selected disabled>Color</option>
+              ${opcionesColor}
+            </select>
+
+            <label for="cantidad-producto-${producto.id}" class="visually-hidden">Cantidad de ${producto.nombre}</label>
+            <select id="cantidad-producto-${producto.id}" class="form-select form-select-sm" data-selection="cantidad" aria-label="Cantidad de ${producto.nombre}">
+              <option value="" selected disabled>Cantidad</option>
+              ${Array.from({ length: 10 }, (_, index) => `<option value="${index + 1}">${index + 1}</option>`).join('')}
+            </select>
+          </div>
         </div>
       </article>
     </div>
@@ -235,77 +265,6 @@ function actualizarCatalogo() {
   renderizarProductos(ordenados);
 }
 
-// =========================================================
-//  CARRITO  (NUEVO, paso 5.3b)
-//  Se guarda en localStorage para que las demás páginas
-//  del equipo (carrito, checkout) puedan leerlo.
-//  Formato: [{ id: 1, cantidad: 2 }, { id: 7, cantidad: 1 }]
-// =========================================================
-
-const CLAVE_CARRITO = 'runup-carrito';
-
-/**
- * Lee el carrito guardado. Si no hay nada (o está dañado), regresa un arreglo vacío.
- */
-function obtenerCarrito() {
-  try {
-    return JSON.parse(localStorage.getItem(CLAVE_CARRITO)) || [];
-  } catch {
-    return [];
-  }
-}
-
-/**
- * Guarda el carrito. localStorage solo acepta texto, por eso usamos JSON.stringify.
- */
-function guardarCarrito(carrito) {
-  localStorage.setItem(CLAVE_CARRITO, JSON.stringify(carrito));
-}
-
-/**
- * Suma la cantidad de todos los artículos del carrito.
- */
-function contarArticulos(carrito) {
-  return carrito.reduce((total, item) => total + item.cantidad, 0);
-}
-
-/**
- * Muestra el total en el ícono del carrito.
- * @param {boolean} animar - si es true, el contador da un pequeño salto
- */
-function actualizarContador(animar = false) {
-  contadorCarrito.textContent = contarArticulos(obtenerCarrito());
-
-  if (animar) {
-    // Web Animations API: animación hecha 100% con JavaScript
-    contadorCarrito.animate(
-      [{ scale: 1 }, { scale: 1.5 }, { scale: 1 }],
-      { duration: 350, easing: 'ease-out' }
-    );
-  }
-}
-
-/**
- * Agrega un producto al carrito. Si ya estaba, aumenta su cantidad.
- * @param {number} id - id del producto
- */
-function agregarAlCarrito(id) {
-  const carrito = obtenerCarrito();
-  const itemExistente = carrito.find((item) => item.id === id);
-
-  if (itemExistente) {
-    itemExistente.cantidad += 1;
-  } else {
-    carrito.push({ id, cantidad: 1 });
-  }
-
-  guardarCarrito(carrito);
-  actualizarContador(true);
-}
-
-/**
- * Cambia el botón a "¡Agregado!" por un momento para confirmar la acción.
- */
 function mostrarConfirmacion(boton) {
   const contenidoOriginal = boton.innerHTML;
 
@@ -318,6 +277,19 @@ function mostrarConfirmacion(boton) {
     boton.classList.remove('agregado');
     boton.disabled = false;
   }, 1200);
+}
+
+function mostrarError(boton, mensaje) {
+  const contenidoOriginal = boton.innerHTML;
+  boton.innerHTML = `<i class="bi bi-exclamation-circle"></i> ${mensaje}`;
+  boton.classList.add('error-agregar');
+  boton.disabled = true;
+
+  setTimeout(() => {
+    boton.innerHTML = contenidoOriginal;
+    boton.classList.remove('error-agregar');
+    boton.disabled = false;
+  }, 1600);
 }
 
 // =========================================================
@@ -340,7 +312,27 @@ grid.addEventListener('click', (evento) => {
   const boton = evento.target.closest('.btn-agregar');
   if (!boton) return; // el clic no fue en un botón de agregar
 
-  agregarAlCarrito(Number(boton.dataset.id));
+  const tarjeta = boton.closest('.tarjeta-producto');
+  const talla = tarjeta.querySelector('[data-selection="talla"]').value;
+  const color = tarjeta.querySelector('[data-selection="color"]').value;
+  const cantidad = Number(tarjeta.querySelector('[data-selection="cantidad"]').value);
+
+  if (!talla || !color || !cantidad) {
+    mostrarError(boton, 'Elige talla, color y cantidad');
+    return;
+  }
+
+  const resultado = agregarAlCarrito(Number(boton.dataset.id), {
+    talla,
+    color,
+    cantidad,
+  });
+
+  if (!resultado.ok) {
+    mostrarError(boton, resultado.mensaje);
+    return;
+  }
+
   mostrarConfirmacion(boton);
 });
 
@@ -350,4 +342,3 @@ grid.addEventListener('click', (evento) => {
 generarOpcionesTalla();
 generarOpcionesColor();
 actualizarCatalogo();
-actualizarContador(); // NUEVO (paso 5.3d): recuerda lo que ya estaba en el carrito

@@ -6,21 +6,14 @@
     <meta name="description" content="Catálogo de tenis, ropa y accesorios deportivos de RunUp." />
     <title>Catálogo | RunUp</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="stylesheet" href="/src/catalogo.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/src/assets/css/header.css" />
+    <link rel="stylesheet" href="/src/assets/css/footer.css" />
   </head>
 
   <body>
-    <!-- ================= NAVBAR =================
-         Aquí irá el navbar que haga el equipo.
-         Por ahora dejamos uno sencillo con el contador del carrito. -->
-    <header class="navbar navbar-dark bg-carbon sticky-top">
-      <div class="container-fluid">
-        <a class="navbar-brand fw-bold" href="/">RunUp</a>
-        <a href="#" class="btn btn-link text-white position-relative" aria-label="Ver carrito">
-          <i class="bi bi-bag fs-5"></i>
-          <span id="contador-carrito" class="badge rounded-pill bg-lima text-carbon position-absolute top-0 start-100 translate-middle">0</span>
-        </a>
-      </div>
-    </header>
+    <div id="header-component"></div>
 
     <main class="container-fluid py-4">
       <div class="row">
@@ -157,6 +150,7 @@
       </div>
     </main>
 
+    <div id="footer-placeholder"></div>
     <script type="module" src="/src/catalogo.js"></script>
   </body>
 </html>

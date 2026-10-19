@@ -1,3 +1,6 @@
+@import 'bootstrap/dist/css/bootstrap.min.css';
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
 /* =========================================
    Catálogo RunUp
    ========================================= */
@@ -10,6 +13,10 @@
   --gris-oscuro: #252a26;
   --gris-suave: #a7b0a7;
   --gris-claro: #f2f3f1; /* fondo de las fotos */
+  --lime: var(--lima);
+  --pure-white: var(--blanco);
+  --light-gray: var(--gris-suave);
+  --dark-gray: var(--gris-oscuro);
 }
 
 body {
@@ -103,6 +110,38 @@ body {
   font-weight: 400;
   color: var(--bs-secondary-color);
   text-decoration: line-through;
+}
+
+.opciones-producto {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.4rem;
+}
+
+.opciones-producto .form-select {
+  min-width: 0;
+  border-color: var(--gris-suave);
+  color: var(--carbon);
+  font-size: 0.78rem;
+}
+
+.opciones-producto .form-select:focus {
+  border-color: var(--carbon);
+  box-shadow: 0 0 0 0.2rem rgb(21 24 22 / 15%);
+}
+
+.opciones-producto [data-selection="cantidad"] {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 575.98px) {
+  .opciones-producto {
+    grid-template-columns: 1fr;
+  }
+
+  .opciones-producto [data-selection="cantidad"] {
+    grid-column: auto;
+  }
 }
 
 /* Botón "Añadir al carrito" sobre la foto
@@ -209,6 +248,11 @@ body {
 .btn-agregar.agregado {
   background-color: var(--carbon);
   color: var(--lima);
+}
+
+.btn-agregar.error-agregar {
+  background-color: var(--carbon);
+  color: var(--blanco);
 }
 
 /* Solo en dispositivos con mouse escondemos el botón hasta el hover.
