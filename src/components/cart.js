@@ -28,17 +28,18 @@ export function crearItemCarrito(producto, { talla, color, cantidad = 1 }) {
   return item
 }
 
-const demoItems = [
-  crearItemCarrito(obtenerProductoPorId(1), { talla: 27, color: 'Negro' }),
-  crearItemCarrito(obtenerProductoPorId(13), { talla: 'M', color: 'Verde lima' }),
-  crearItemCarrito(obtenerProductoPorId(22), { talla: 'M', color: 'Blanco' }),
-]
 const storageKey = 'runup-cart-v2'
 // El mismo producto en otra talla o color ocupa una línea diferente.
 const claveItem = item => JSON.stringify([item.id, item.talla, item.color])
 let carritoActual = null
 const suscriptoresCarrito = new Set()
 const guardarSeleccion = items => localStorage.setItem(storageKey, JSON.stringify(items.map(({ id, talla, color, cantidad }) => ({ id, talla, color, cantidad }))))
+const notificarActualizacionCarrito = items => {
+  if (typeof document !== 'undefined') {
+    const cantidad = items.reduce((total, item) => total + item.cantidad, 0)
+    document.dispatchEvent(new CustomEvent('runup:carrito-actualizado', { detail: { cantidad } }))
+  }
+}
 
 export function obtenerCantidadCarrito() {
   const items = carritoActual ?? (() => {
@@ -53,8 +54,6 @@ export function obtenerCantidadCarrito() {
   return items.reduce((total, item) => total + item.cantidad, 0)
 }
 
-// IMPLEMENTAR EN EL BOTÓN «AGREGAR AL CARRITO» DEL CATÁLOGO:
-// importar agregarAlCarrito y llamarlo con producto.id, talla y color seleccionados.
 export function agregarAlCarrito(id, { talla, color, cantidad = 1 } = {}) {
   const nuevo = recuperarItemCarrito({ id, talla, color, cantidad })
   if (!nuevo) return { ok: false, guardado: false, mensaje: 'Selecciona un producto, talla, color y cantidad válidos.' }
@@ -77,6 +76,7 @@ export function agregarAlCarrito(id, { talla, color, cantidad = 1 } = {}) {
   let guardado = true
   try { guardarSeleccion(items) } catch { guardado = false }
   carritoActual = items
+  notificarActualizacionCarrito(items)
   const mensaje = guardado ? `${nuevo.nombre} agregado al carrito.` : `${nuevo.nombre} agregado, pero no pudimos guardarlo. Los cambios podrían perderse al recargar.`
   for (const actualizar of suscriptoresCarrito) actualizar(items, mensaje, guardado)
   return { ok: true, guardado, mensaje }
@@ -89,7 +89,7 @@ const imagenProducto = item => {
   return safeUrl ? `<img src="${escapeHtml(safeUrl)}" alt="${escapeHtml(item.nombre)}" loading="lazy" />` : '<span>Sin imagen</span>'
 }
 
-export function mountCart(root, initialItems = demoItems) {
+export function mountCart(root, initialItems = []) {
   let items = (carritoActual ?? initialItems).map(recuperarItemCarrito).filter(Boolean)
   let notice = ''
   let storageWarning = ''
@@ -118,14 +118,12 @@ export function mountCart(root, initialItems = demoItems) {
       <main class="container cart-page"><div class="eyebrow">TU PRÓXIMA META EMPIEZA AQUÍ</div><div class="title-row"><h1>Prepárate para<br><span>dar el siguiente paso.</span></h1><span class="step-label">01 / CARRITO <span>— 02 / PAGO</span></span></div>
       ${storageWarning ? `<div class="storage-warning" role="alert">${storageWarning}</div>` : ''}
       <div class="row g-4 g-xl-5 mt-2"><section class="col-lg-8" aria-labelledby="cart-heading"><div class="section-heading"><h2 id="cart-heading"><svg class="cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2 3h3l3 12h11l3-9H6"/><path d="M8 15l-1 3h13"/><circle cx="9" cy="21" r="1"/><circle cx="18" cy="21" r="1"/></svg>Tu carrito <span>(${count})</span></h2><span>PRECIO EN MXN</span></div>
-      <div class="cart-items">${items.length ? items.map(item => `<article class="cart-item"><div class="product-art">${imagenProducto(item)}</div><div class="product-info"><h3>${escapeHtml(item.nombre)}</h3><p class="variant">${escapeHtml(item.color)} · Talla ${escapeHtml(item.talla)}</p><div class="quantity-control" aria-label="Cantidad de ${escapeHtml(item.nombre)}"><button type="button" data-action="decrease" data-key="${escapeHtml(claveItem(item))}" data-focus="minus-${items.indexOf(item)}" aria-label="Reducir cantidad de ${escapeHtml(item.nombre)}" ${item.cantidad === 1 ? 'disabled' : ''}>−</button><span>${item.cantidad}</span><button type="button" data-action="increase" data-key="${escapeHtml(claveItem(item))}" data-focus="plus-${items.indexOf(item)}" aria-label="Aumentar cantidad de ${escapeHtml(item.nombre)}" ${item.cantidad === 10 ? 'disabled' : ''}>+</button></div></div><div class="item-end"><div class="item-price"><strong>${money(precioFinal(item) * item.cantidad)}</strong>${item.descuento > 0 ? `<div class="price-discount"><del>${money(item.precio * item.cantidad)}</del><span>−${item.descuento}%</span></div>` : ''}</div><button class="remove-button" type="button" data-action="remove" data-key="${escapeHtml(claveItem(item))}" aria-label="Eliminar ${escapeHtml(item.nombre)}">Eliminar <span aria-hidden="true">×</span></button></div></article>`).join('') : '<div class="empty-cart"><span aria-hidden="true">↗</span><h3>Hay nuevas metas por llenar.</h3><p>Tu carrito está vacío. Recupera los productos de muestra para explorar el componente.</p><button class="btn btn-lime" data-action="reset">Explorar productos de muestra</button></div>'}</div>
-      <div class="cart-bottom"><button type="button" class="text-button" data-action="reset">← Ver productos de muestra</button><span>HECHO PARA TU MEJOR VERSIÓN.</span></div>
+      <div class="cart-items">${items.length ? items.map(item => `<article class="cart-item"><div class="product-art">${imagenProducto(item)}</div><div class="product-info"><h3>${escapeHtml(item.nombre)}</h3><p class="variant">${escapeHtml(item.color)} · Talla ${escapeHtml(item.talla)}</p><div class="quantity-control" aria-label="Cantidad de ${escapeHtml(item.nombre)}"><button type="button" data-action="decrease" data-key="${escapeHtml(claveItem(item))}" data-focus="minus-${items.indexOf(item)}" aria-label="Reducir cantidad de ${escapeHtml(item.nombre)}" ${item.cantidad === 1 ? 'disabled' : ''}>−</button><span>${item.cantidad}</span><button type="button" data-action="increase" data-key="${escapeHtml(claveItem(item))}" data-focus="plus-${items.indexOf(item)}" aria-label="Aumentar cantidad de ${escapeHtml(item.nombre)}" ${item.cantidad === 10 ? 'disabled' : ''}>+</button></div></div><div class="item-end"><div class="item-price"><strong>${money(precioFinal(item) * item.cantidad)}</strong>${item.descuento > 0 ? `<div class="price-discount"><del>${money(item.precio * item.cantidad)}</del><span>−${item.descuento}%</span></div>` : ''}</div><button class="remove-button" type="button" data-action="remove" data-key="${escapeHtml(claveItem(item))}" aria-label="Eliminar ${escapeHtml(item.nombre)}">Eliminar <span aria-hidden="true">×</span></button></div></article>`).join('') : '<div class="empty-cart"><span aria-hidden="true">↗</span><h3>Hay nuevas metas por llenar.</h3><p>Tu carrito está vacío. Encuentra equipo para tu siguiente meta.</p><a class="btn btn-lime" href="./catalogo.html">Explorar catálogo</a></div>'}</div>
+      <div class="cart-bottom"><a class="text-button" href="./catalogo.html">← Seguir comprando</a><span>HECHO PARA TU MEJOR VERSIÓN.</span></div>
       <div class="benefits"><div><span class="benefit-icon">↗</span><strong>Sin límites.</strong><p>Equipo que sigue tu ritmo.</p></div><div><span class="benefit-icon">↺</span><strong>Corre con confianza.</strong><p>Diseñado para cada kilómetro.</p></div></div></section>
       <aside class="col-lg-4"><div class="order-summary"><div class="summary-top"><span class="eyebrow">UN PASO MÁS CERCA</span><span aria-hidden="true">↗</span></div><h2>Resumen de compra</h2><div class="summary-line"><span>Subtotal <small>(${count} ${count === 1 ? 'artículo' : 'artículos'})</small></span><strong>${money(subtotal)}</strong></div><div class="summary-line"><span>Envío estimado</span><strong class="${shipping === 0 ? 'lime-text' : ''}">${shipping === 0 ? 'Gratis' : money(shipping)}</strong></div><div class="shipping-note">${subtotal === 0 ? 'Agrega productos para comenzar.' : subtotal >= 2999 ? '¡Tu pedido ya tiene envío gratis!' : `Te faltan ${money(2999 - subtotal)} para envío gratis.`}<div class="shipping-track"><span style="width:${Math.min(100, subtotal / 2999 * 100)}%"></span></div></div><div class="summary-total"><div><span>Total estimado</span><small>IVA incluido · MXN</small></div><strong>${money(subtotal + shipping)}</strong></div><button class="btn btn-lime checkout-button" data-action="checkout" ${!count ? 'disabled' : ''}>Continuar al pago <span aria-hidden="true">↗</span></button><div class="payment-note"><span aria-hidden="true">◇</span> Tu siguiente kilómetro te espera.</div></div><div class="motivation"><span>NO SE TRATA DE LLEGAR.</span><strong>Se trata de<br>seguir avanzando<span>↗</span></strong><div class="track-lines" aria-hidden="true"></div></div></aside></div>
       <p class="cart-notice" role="status" aria-live="polite">${escapeHtml(notice)}</p></main>`
-    if (typeof document !== 'undefined') {
-      document.dispatchEvent(new CustomEvent('runup:carrito-actualizado', { detail: { cantidad: count } }))
-    }
+    notificarActualizacionCarrito(items)
     if (focusKey) root.querySelector(`[data-focus="${focusKey}"]`)?.focus()
   }
   function handleClick(event) {
