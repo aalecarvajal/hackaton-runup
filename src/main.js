@@ -1,60 +1,92 @@
+import 'bootstrap/dist/css/bootstrap.min.css'
 import './style.css'
-import heroImg from './assets/hero.png'
-import javascriptLogo from './assets/javascript.svg'
-import viteLogo from './assets/vite.svg'
-import { setupCounter } from './counter.js'
+import 'bootstrap/js/dist/carousel'
 
 document.querySelector('#app').innerHTML = `
-<section id="center">
-  <div class="hero">
-    <img src="${heroImg}" class="base" width="170" height="179">
-    <img src="${javascriptLogo}" class="framework" alt="JavaScript logo"/>
-    <img src="${viteLogo}" class="vite" alt="Vite logo" />
+  <main id="inicio" class="runup-inicio">
+    <div
+  id="carruselInicio"
+  class="carousel slide"
+  role="region"
+  aria-label="Novedades de RUNUP"
+>
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <div class="runup-banner">
+        <span class="runup-banner__marca">RUNUP</span>
+        <p>Tu próximo kilómetro empieza aquí.</p>
+      </div>
+    </div>
+
+    <div class="carousel-item">
+      <div class="runup-banner">
+        <span class="runup-banner__marca">SIN LÍMITES</span>
+        <p>Descubre el equipo para tu siguiente meta.</p>
+      </div>
+    </div>
+
+    <div class="carousel-item">
+      <div class="runup-banner">
+        <span class="runup-banner__marca">A TU RITMO</span>
+        <p>Desde tu primer kilómetro, corre con RUNUP.</p>
+      </div>
+    </div>
   </div>
-  <div>
-    <h1>Get started</h1>
-    <p>Edit <code>src/main.js</code> and save to test <code>HMR</code></p>
+
+  <button
+    class="carousel-control-prev"
+    type="button"
+    data-bs-target="#carruselInicio"
+    data-bs-slide="prev"
+    aria-label="Diapositiva anterior"
+  >
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+  </button>
+
+  <button
+    class="carousel-control-next"
+    type="button"
+    data-bs-target="#carruselInicio"
+    data-bs-slide="next"
+    aria-label="Diapositiva siguiente"
+  >
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+  </button>
+</div>
+  
+    <section class="container py-5">
+      <p class="fw-bold text-uppercase">RUNUP — Encuentra tu ritmo</p>
+
+      <h1 class="display-3 fw-bold">
+        Cada paso te lleva más lejos.
+      </h1>
+
+      <p class="lead">
+        Equípate para tu próximo kilómetro.
+        Tu siguiente meta empieza aquí.
+      </p>
+    </section>
+
+    <section class="runup-nosotros container" aria-labelledby="titulo-nosotros">
+  <div class="row align-items-center g-4">
+    <div class="col-12 col-md-5">
+      <p class="fw-bold text-uppercase">Sobre nosotros</p>
+      <h2 id="titulo-nosotros">
+        Cada corredor tiene una historia.
+      </h2>
+    </div>
+
+    <div class="col-12 col-md-7">
+      <p class="runup-nosotros__texto">
+        En RUNUP creemos que correr empieza con las ganas de dar
+        el primer paso. Queremos acompañarte con ropa, calzado y
+        accesorios para que encuentres tu propio ritmo.
+      </p>
+      <p class="runup-nosotros__lema">
+        Tu camino. Tu ritmo. RUNUP.
+      </p>
+    </div>
   </div>
-  <button id="counter" type="button" class="counter"></button>
 </section>
-
-<div class="ticks"></div>
-
-<section id="next-steps">
-  <div id="docs">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#documentation-icon"></use></svg>
-    <h2>Documentation</h2>
-    <p>Your questions, answered</p>
-    <ul>
-      <li>
-        <a href="https://vite.dev/" target="_blank">
-          <img class="logo" src="${viteLogo}" alt="" />
-          Explore Vite
-        </a>
-      </li>
-      <li>
-        <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-          <img class="button-icon" src="${javascriptLogo}" alt="">
-          Learn more
-        </a>
-      </li>
-    </ul>
-  </div>
-  <div id="social">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#social-icon"></use></svg>
-    <h2>Connect with us</h2>
-    <p>Join the Vite community</p>
-    <ul>
-      <li><a href="https://github.com/vitejs/vite" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#github-icon"></use></svg>GitHub</a></li>
-      <li><a href="https://chat.vite.dev/" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#discord-icon"></use></svg>Discord</a></li>
-      <li><a href="https://x.com/vite_js" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#x-icon"></use></svg>X.com</a></li>
-      <li><a href="https://bsky.app/profile/vite.dev" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#bluesky-icon"></use></svg>Bluesky</a></li>
-    </ul>
-  </div>
-</section>
-
-<div class="ticks"></div>
-<section id="spacer"></section>
+  </main>
 `
-
-setupCounter(document.querySelector('#counter'))
