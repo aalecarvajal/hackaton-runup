@@ -10,11 +10,38 @@ document.querySelector('#app').innerHTML = `
   role="region"
   aria-label="Novedades de RUNUP"
 >
-  <div class="carousel-inner">
+  <div class="carousel-inner"> 
+  <div class="carousel-indicators">
+  <button
+    type="button"
+    data-bs-target="#carruselInicio"
+    data-bs-slide-to="0"
+    class="active"
+    aria-current="true"
+    aria-label="Ir a bienvenida"
+  ></button>
+
+  <button
+    type="button"
+    data-bs-target="#carruselInicio"
+    data-bs-slide-to="1"
+    aria-label="Ir a equipamiento"
+  ></button>
+
+  <button
+    type="button"
+    data-bs-target="#carruselInicio"
+    data-bs-slide-to="2"
+    aria-label="Ir a encuentra tu ritmo"
+  ></button>
+</div>
     <div class="carousel-item active">
       <div class="runup-banner">
         <span class="runup-banner__marca">RUNUP</span>
         <p>Tu próximo kilómetro empieza aquí.</p>
+        <a href="./catalogo.html" class="runup-boton">
+  Explorar productos <span aria-hidden="true">→</span>
+</a>
       </div>
     </div>
 
@@ -22,6 +49,9 @@ document.querySelector('#app').innerHTML = `
       <div class="runup-banner">
         <span class="runup-banner__marca">SIN LÍMITES</span>
         <p>Descubre el equipo para tu siguiente meta.</p>
+        <a href="./catalogo.html" class="runup-boton">
+  Ver catálogo <span aria-hidden="true">→</span>
+</a>
       </div>
     </div>
 
@@ -29,6 +59,9 @@ document.querySelector('#app').innerHTML = `
       <div class="runup-banner">
         <span class="runup-banner__marca">A TU RITMO</span>
         <p>Desde tu primer kilómetro, corre con RUNUP.</p>
+        <a href="./comunidad.html" class="runup-boton">
+  Comunidad RUNUP <span aria-hidden="true">→</span>
+</a>
       </div>
     </div>
   </div>
