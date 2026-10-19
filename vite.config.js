@@ -6,6 +6,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         inicio: fileURLToPath(new URL('./index.html', import.meta.url)),
+        catalogo: fileURLToPath(new URL('./catalogo.html', import.meta.url)),
         carrito: fileURLToPath(new URL('./carrito.html', import.meta.url)),
       },
     },

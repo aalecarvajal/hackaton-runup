@@ -694,19 +694,23 @@ body {
 
 /* Fondo provisional hasta agregar las fotografías. */
 .runup-inicio .runup-banner {
+  position: relative;
+  isolation: isolate;
   min-height: clamp(280px, 45vw, 500px);
-  padding: 2rem;
+  padding: 2rem 16% 4rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
   background: var(--runup-carbon);
+  background-size: cover;
+  background-position: center;
   color: var(--runup-white);
 }
 
 .runup-inicio .runup-banner__marca {
-  font-size: clamp(4rem, 14vw, 10rem);
+  font-size: clamp(2rem, 8vw, 7rem);
   font-weight: 900;
   font-style: italic;
   line-height: 1;
@@ -717,14 +721,6 @@ body {
 .runup-inicio .runup-banner p {
   margin-top: 1.5rem;
   font-size: clamp(1rem, 2vw, 1.4rem);
-}
-
-.runup-inicio .runup-banner {
-  padding-inline: 16%;
-}
-
-.runup-inicio .runup-banner__marca {
-  font-size: clamp(2rem, 8vw, 7rem);
 }
 
 .runup-inicio .runup-nosotros {
@@ -781,10 +777,6 @@ body {
   background-color: var(--runup-lime);
 }
 
-.runup-inicio .runup-banner {
-  padding-bottom: 4rem;
-}
-
 @media (max-width: 576px) {
   .runup-inicio .runup-boton {
     font-size: 0.875rem;
@@ -792,12 +784,6 @@ body {
     gap: 0.5rem;
     white-space: nowrap;
   }
-}
-.runup-inicio .runup-banner {
-  position: relative;
-  isolation: isolate;
-  background-size: cover;
-  background-position: center;
 }
 
 /* Capa oscura para leer el texto sobre las futuras fotos. */
