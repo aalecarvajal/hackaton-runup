@@ -41,6 +41,7 @@ const suscriptoresCarrito = new Set()
 const guardarSeleccion = items => localStorage.setItem(storageKey, JSON.stringify(items.map(({ id, talla, color, cantidad }) => ({ id, talla, color, cantidad }))))
 
 // IMPLEMENTAR EN EL BOTÓN «AGREGAR AL CARRITO» DEL CATÁLOGO:
+// importar agregarAlCarrito y llamarlo con producto.id, talla y color seleccionados.
 export function agregarAlCarrito(id, { talla, color, cantidad = 1 } = {}) {
   const nuevo = recuperarItemCarrito({ id, talla, color, cantidad })
   if (!nuevo) return { ok: false, guardado: false, mensaje: 'Selecciona un producto, talla, color y cantidad válidos.' }
@@ -109,6 +110,9 @@ export function mountCart(root, initialItems = demoItems) {
       <div class="benefits"><div><span class="benefit-icon">↗</span><strong>Sin límites.</strong><p>Equipo que sigue tu ritmo.</p></div><div><span class="benefit-icon">↺</span><strong>Corre con confianza.</strong><p>Diseñado para cada kilómetro.</p></div></div></section>
       <aside class="col-lg-4"><div class="order-summary"><div class="summary-top"><span class="eyebrow">UN PASO MÁS CERCA</span><span aria-hidden="true">↗</span></div><h2>Resumen de compra</h2><div class="summary-line"><span>Subtotal <small>(${count} ${count === 1 ? 'artículo' : 'artículos'})</small></span><strong>${money(subtotal)}</strong></div><div class="summary-line"><span>Envío estimado</span><strong class="${shipping === 0 ? 'lime-text' : ''}">${shipping === 0 ? 'Gratis' : money(shipping)}</strong></div><div class="shipping-note">${subtotal === 0 ? 'Agrega productos para comenzar.' : subtotal >= 2999 ? '¡Tu pedido ya tiene envío gratis!' : `Te faltan ${money(2999 - subtotal)} para envío gratis.`}<div class="shipping-track"><span style="width:${Math.min(100, subtotal / 2999 * 100)}%"></span></div></div><div class="summary-total"><div><span>Total estimado</span><small>IVA incluido · MXN</small></div><strong>${money(subtotal + shipping)}</strong></div><button class="btn btn-lime checkout-button" data-action="checkout" ${!count ? 'disabled' : ''}>Continuar al pago <span aria-hidden="true">↗</span></button><div class="payment-note"><span aria-hidden="true">◇</span> Tu siguiente kilómetro te espera.</div></div><div class="motivation"><span>NO SE TRATA DE LLEGAR.</span><strong>Se trata de<br>seguir avanzando<span>↗</span></strong><div class="track-lines" aria-hidden="true"></div></div></aside></div>
       <p class="cart-notice" role="status" aria-live="polite">${escapeHtml(notice)}</p></main>`
+    if (typeof document !== 'undefined') {
+      document.dispatchEvent(new CustomEvent('runup:carrito-actualizado', { detail: { cantidad: count } }))
+    }
     if (focusKey) root.querySelector(`[data-focus="${focusKey}"]`)?.focus()
   }
   function handleClick(event) {
