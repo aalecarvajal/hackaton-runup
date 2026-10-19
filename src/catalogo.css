@@ -105,8 +105,7 @@ body {
   text-decoration: line-through;
 }
 
-/* Botón "Añadir al carrito" sobre la foto
-   (en el paso 5 lo escondemos y aparece con hover) */
+/* Botón "Añadir al carrito" sobre la foto */
 .btn-agregar {
   position: absolute;
   left: 0.75rem;
@@ -238,3 +237,12 @@ body {
   }
 }
 
+/* Accesibilidad: si la persona pidió menos movimiento en su sistema, lo respetamos */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

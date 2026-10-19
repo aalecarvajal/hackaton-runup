@@ -23,7 +23,7 @@ const contenedorTallas = document.querySelector('#opciones-talla');
 const contenedorColores = document.querySelector('#opciones-color');
 const selectOrdenar = document.querySelector('#ordenar');
 const precioMaxTexto = document.querySelector('#precio-max-texto');
-const contadorCarrito = document.querySelector('#contador-carrito'); // NUEVO (paso 5.3a)
+const contadorCarrito = document.querySelector('#contador-carrito');
 
 // =========================================================
 //  TARJETAS
@@ -35,7 +35,7 @@ const contadorCarrito = document.querySelector('#contador-carrito'); // NUEVO (p
  * @param {number} indice - Posición de la tarjeta (para la animación de entrada)
  * @returns {string} HTML de la tarjeta
  */
-function crearTarjeta(producto, indice) { // CAMBIO (paso 5.2): ahora recibe "indice"
+function crearTarjeta(producto, indice) {
   const tieneDescuento = producto.descuento > 0;
 
   // Operador ternario: si se cumple la condición usa lo primero, si no, lo segundo
@@ -56,7 +56,7 @@ function crearTarjeta(producto, indice) { // CAMBIO (paso 5.2): ahora recibe "in
     .map((color) => `<span class="punto-color" style="background-color: ${color.hex}" title="${color.nombre}"></span>`)
     .join('');
 
-  // CAMBIO (paso 5.2): el <article> ahora lleva style="--i: ${indice}"
+ 
   return `
     <div class="col">
       <article class="tarjeta-producto h-100" style="--i: ${indice}">
@@ -236,7 +236,7 @@ function actualizarCatalogo() {
 }
 
 // =========================================================
-//  CARRITO  (NUEVO, paso 5.3b)
+
 //  Se guarda en localStorage para que las demás páginas
 //  del equipo (carrito, checkout) puedan leerlo.
 //  Formato: [{ id: 1, cantidad: 2 }, { id: 7, cantidad: 1 }]
@@ -333,7 +333,7 @@ form.addEventListener('reset', () => setTimeout(actualizarCatalogo));
 
 selectOrdenar.addEventListener('change', actualizarCatalogo);
 
-// NUEVO (paso 5.3c)
+
 // Delegación de eventos: escuchamos al grid completo en vez de a cada botón,
 // porque las tarjetas se borran y se vuelven a crear cada vez que filtramos.
 grid.addEventListener('click', (evento) => {
@@ -350,4 +350,4 @@ grid.addEventListener('click', (evento) => {
 generarOpcionesTalla();
 generarOpcionesColor();
 actualizarCatalogo();
-actualizarContador(); // NUEVO (paso 5.3d): recuerda lo que ya estaba en el carrito
+actualizarContador(); // recupera lo que ya estaba en el carrito
