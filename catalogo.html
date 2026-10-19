@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Catálogo de tenis, ropa y accesorios deportivos de RunUp." />
+    <title>Catálogo | RunUp</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+
+  <body>
+    <!-- ================= NAVBAR =================
+         Aquí irá el navbar que haga el equipo.
+         Por ahora dejamos uno sencillo con el contador del carrito. -->
+    <header class="navbar navbar-dark bg-carbon sticky-top">
+      <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="/">RunUp</a>
+        <a href="#" class="btn btn-link text-white position-relative" aria-label="Ver carrito">
+          <i class="bi bi-bag fs-5"></i>
+          <span id="contador-carrito" class="badge rounded-pill bg-lima text-carbon position-absolute top-0 start-100 translate-middle">0</span>
+        </a>
+      </div>
+    </header>
+
+    <main class="container-fluid py-4">
+      <div class="row">
+
+        <!-- ================= SIDEBAR DE FILTROS =================
+             offcanvas-lg: en pantallas grandes se ve fija,
+             en celular se convierte en panel deslizable. -->
+        <aside class="col-lg-3">
+          <div class="offcanvas-lg offcanvas-start" tabindex="-1" id="panel-filtros" aria-labelledby="titulo-filtros">
+
+            <div class="offcanvas-header">
+              <h2 class="offcanvas-title h5" id="titulo-filtros">Filtros</h2>
+              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#panel-filtros" aria-label="Cerrar filtros"></button>
+            </div>
+
+            <div class="offcanvas-body">
+              <!-- Un <form> nos permite leer todos los filtros juntos
+                   y limpiarlos con un botón de tipo reset -->
+              <form id="form-filtros" class="w-100">
+
+                <!-- Categoría -->
+                <fieldset class="filtro">
+                  <legend class="filtro-titulo">Categoría</legend>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="categoria" value="tenis" id="cat-tenis" />
+                    <label class="form-check-label" for="cat-tenis">Tenis</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="categoria" value="ropa" id="cat-ropa" />
+                    <label class="form-check-label" for="cat-ropa">Ropa</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="categoria" value="accesorios" id="cat-accesorios" />
+                    <label class="form-check-label" for="cat-accesorios">Accesorios</label>
+                  </div>
+                </fieldset>
+
+                <!-- Género -->
+                <fieldset class="filtro">
+                  <legend class="filtro-titulo">Género</legend>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="genero" value="hombre" id="gen-hombre" />
+                    <label class="form-check-label" for="gen-hombre">Hombre</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="genero" value="mujer" id="gen-mujer" />
+                    <label class="form-check-label" for="gen-mujer">Mujer</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="genero" value="unisex" id="gen-unisex" />
+                    <label class="form-check-label" for="gen-unisex">Unisex</label>
+                  </div>
+                </fieldset>
+
+                <!-- Talla: las opciones las crea JavaScript a partir de los productos -->
+                <fieldset class="filtro">
+                  <legend class="filtro-titulo">Talla</legend>
+                  <div id="opciones-talla" class="d-flex flex-wrap gap-2"></div>
+                </fieldset>
+
+                <!-- Color: también lo genera JavaScript -->
+                <fieldset class="filtro">
+                  <legend class="filtro-titulo">Color</legend>
+                  <div id="opciones-color" class="d-flex flex-wrap gap-2"></div>
+                </fieldset>
+
+                <!-- Tipo de pisada (solo aplica a tenis) -->
+                <fieldset class="filtro">
+                  <legend class="filtro-titulo">Tipo de pisada</legend>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="pisada" value="neutra" id="pis-neutra" />
+                    <label class="form-check-label" for="pis-neutra">Neutra</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="pisada" value="pronadora" id="pis-pronadora" />
+                    <label class="form-check-label" for="pis-pronadora">Pronadora</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="pisada" value="supinadora" id="pis-supinadora" />
+                    <label class="form-check-label" for="pis-supinadora">Supinadora</label>
+                  </div>
+                </fieldset>
+
+                <!-- Precio máximo con un slider -->
+                <fieldset class="filtro">
+                  <legend class="filtro-titulo">Precio máximo</legend>
+                  <input type="range" class="form-range" name="precioMax" id="precio-max" min="200" max="4500" step="100" value="4500" />
+                  <p class="small mb-0">Hasta <strong id="precio-max-texto">$4,500</strong></p>
+                </fieldset>
+
+                <button type="reset" class="btn btn-outline-dark w-100 mt-3">Limpiar filtros</button>
+              </form>
+            </div>
+          </div>
+        </aside>
+
+        <!-- ================= PRODUCTOS ================= -->
+        <section class="col-lg-9" aria-labelledby="titulo-catalogo">
+
+          <!-- Barra superior: título, contador, botón de filtros (móvil) y ordenador -->
+          <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
+            <div>
+              <h1 id="titulo-catalogo" class="h3 fw-bold mb-0">Catálogo</h1>
+              <p class="text-secondary small mb-0"><span id="total-resultados">0</span> productos</p>
+            </div>
+
+            <div class="d-flex gap-2">
+              <!-- Este botón solo se ve en celular/tablet (d-lg-none) -->
+              <button class="btn btn-outline-dark d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#panel-filtros" aria-controls="panel-filtros">
+                <i class="bi bi-funnel"></i> Filtros
+              </button>
+
+              <label for="ordenar" class="visually-hidden">Ordenar por</label>
+              <select id="ordenar" class="form-select">
+                <option value="relevancia">Ordenar por: Relevancia</option>
+                <option value="precio-asc">Precio: menor a mayor</option>
+                <option value="precio-desc">Precio: mayor a menor</option>
+                <option value="descuento">Mayor descuento</option>
+                <option value="nuevo">Lo más nuevo</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Grid: 2 columnas en celular, 3 en tablet, 4 en pantallas grandes.
+               JavaScript va a llenar este div con las tarjetas. -->
+          <div id="grid-productos" class="row row-cols-2 row-cols-md-3 row-cols-xl-4 g-3"></div>
+
+          <!-- Mensaje cuando ningún producto cumple los filtros (oculto al inicio) -->
+          <p id="sin-resultados" class="text-center text-secondary py-5 d-none">
+            No encontramos productos con esos filtros. Prueba quitando alguno.
+          </p>
+        </section>
+
+      </div>
+    </main>
+
+    <script type="module" src="/src/catalogo.js"></script>
+  </body>
+</html>
