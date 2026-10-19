@@ -40,6 +40,19 @@ let carritoActual = null
 const suscriptoresCarrito = new Set()
 const guardarSeleccion = items => localStorage.setItem(storageKey, JSON.stringify(items.map(({ id, talla, color, cantidad }) => ({ id, talla, color, cantidad }))))
 
+export function obtenerCantidadCarrito() {
+  const items = carritoActual ?? (() => {
+    if (typeof localStorage === 'undefined') return []
+    try {
+      const saved = JSON.parse(localStorage.getItem(storageKey))
+      return Array.isArray(saved) ? saved.map(recuperarItemCarrito).filter(Boolean) : []
+    } catch {
+      return []
+    }
+  })()
+  return items.reduce((total, item) => total + item.cantidad, 0)
+}
+
 // IMPLEMENTAR EN EL BOTÓN «AGREGAR AL CARRITO» DEL CATÁLOGO:
 // importar agregarAlCarrito y llamarlo con producto.id, talla y color seleccionados.
 export function agregarAlCarrito(id, { talla, color, cantidad = 1 } = {}) {
