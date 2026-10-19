@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-runup sticky-top">
     <div class="container-fluid px-4 px-lg-5">
-        <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="./index.html">
             <i class="fa-solid fa-shoe-prints text-lime"></i> RUNUP
         </a>
         <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarRunup" aria-controls="navbarRunup" aria-expanded="false" aria-label="Toggle navigation">
@@ -8,9 +8,9 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarRunup">
             <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link active" href="#">Inicio</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Catalogo</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Comunidad</a></li>
+                <li class="nav-item"><a class="nav-link" data-page-link="inicio" href="./index.html">Inicio</a></li>
+                <li class="nav-item"><a class="nav-link" data-page-link="catalogo" href="./catalogo.html">Catalogo</a></li>
+                <li class="nav-item"><a class="nav-link" data-page-link="comunidad" href="./comunidad.html">Comunidad</a></li>
             </ul>
             <div class="d-flex align-items-center gap-3 mt-3 mt-lg-0">
                 <div class="search-box d-none d-lg-flex">
@@ -18,10 +18,10 @@
                     <input type="text" placeholder="Buscar">
                 </div>
                 <button class="btn-icon"><i class="fa-regular fa-heart"></i></button>
-                <button class="btn-icon">
+                <a class="btn-icon" data-page-link="carrito" href="./carrito.html" aria-label="Ver carrito">
                     <i class="fa-solid fa-bag-shopping"></i>
-                    <span class="cart-badge bg-lime">2</span>
-                </button>
+                    <span class="cart-badge bg-lime" data-cart-count hidden>0</span>
+                </a>
             </div>
         </div>
     </div>
