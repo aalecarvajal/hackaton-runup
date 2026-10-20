@@ -1,0 +1,24 @@
+:root {
+  --carbon: #151816;
+  --lima: #c5f36a;
+  --blanco: #ffffff;
+  --gris-oscuro: #252a26;
+  --gris-suave: #a7b0a7;
+  --pure-white: var(--blanco);
+  --light-gray: var(--gris-suave);
+  --dark-gray: var(--gris-oscuro);
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--blanco);
+  color: var(--carbon);
+  display: flex;
+  flex-direction: column;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}

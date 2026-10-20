@@ -1,6 +1,6 @@
-import headerHTML from './components/header.html?raw'
-import footerHTML from './components/footer.html?raw'
-import { obtenerCantidadCarrito } from './components/cart.js'
+import headerHTML from './header.html?raw'
+import footerHTML from './footer.html?raw'
+import { obtenerCantidadCarrito } from './cart.js'
 
 export function mountLayout({ activePage } = {}) {
   const headerRoot = document.getElementById('header-component')

@@ -7,9 +7,9 @@
 import 'bootstrap';
 
 // ===== Datos =====
-import { productos, precioFinal, formatearPrecio } from './data/productos.js';
-import { agregarAlCarrito } from './components/cart.js';
-import { mountLayout } from './layout.js';
+import { productos, precioFinal, formatearPrecio } from '../data/productos.js';
+import { agregarAlCarrito } from '../components/cart.js';
+import { mountLayout } from '../components/layout.js';
 
 // ===== Referencias a elementos del HTML =====
 // Las guardamos una sola vez para no buscarlas cada vez que las usamos

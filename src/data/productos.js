@@ -153,7 +153,7 @@ export const productos = [
    resenas: 176,
    nuevo: false,
    destacado: false,
-   imagen: '/img/productos/producto-06.jpg',
+   imagen: '/img/productos/producto-07.jpg',
    descripcion: 'Estabilidad y amortiguación para entrenamientos de todos los días.',
  },
  {
