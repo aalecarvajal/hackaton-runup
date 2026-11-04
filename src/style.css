@@ -703,7 +703,7 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
-  background: var(--runup-carbon);
+  background-color: var(--runup-carbon);
   background-size: cover;
   background-position: center;
   color: var(--runup-white);
@@ -791,6 +791,21 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgb(0 0 0 / 40%);
+  background-color: rgb(0 0 0 / 30%);
   z-index: -1;
+}
+
+.runup-banner--bienvenida {
+  background-image:    
+    url('/img/banner-bienvenida.jpg');
+}
+
+.runup-banner--equipamiento {
+  background-image:
+    url('/img/banner-equipamiento.jpg');
+}
+
+.runup-banner--ritmo {
+  background-image:
+    url('/img/banner-ritmo.jpg');
 }
